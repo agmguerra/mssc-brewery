@@ -5,8 +5,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import guru.springframework.web.model.BeerDto;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class BeerServiceImpl implements BeerService {
 
 	@Override
@@ -26,8 +28,13 @@ public class BeerServiceImpl implements BeerService {
 
 	@Override
 	public void updateBeer(UUID beerId, BeerDto beerDto) {
-		//TODO implementar o metodo
+		log.debug("updating a beer instance");
 
+	}
+
+	@Override
+	public void deleteById(UUID beerId) {
+		log.debug("deleting a beer instance");
 	}
 
 }
