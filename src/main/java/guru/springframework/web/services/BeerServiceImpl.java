@@ -24,4 +24,10 @@ public class BeerServiceImpl implements BeerService {
 
 	}
 
+	@Override
+	public void updateBeer(UUID beerId, BeerDto beerDto) {
+		//TODO implementar o metodo
+
+	}
+
 }
