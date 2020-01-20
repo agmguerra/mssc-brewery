@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import guru.springframework.web.controller.BeerController;
 import guru.springframework.web.model.BeerDto;
 import guru.springframework.web.services.BeerService;
 
