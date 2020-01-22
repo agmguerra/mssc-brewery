@@ -1,12 +1,18 @@
 package guru.springframework.web.controller;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Deprecated
+
 @RestController
 @RequestMapping("/api/v1/beer")
 @Api(tags = "Beer")
@@ -56,9 +62,8 @@ public class BeerController {
 			@ApiResponse(code = 400, message = " Bad request is received", response = Error.class),
 			@ApiResponse(code = 500, message = " Server error", response = Error.class)
 	})
-
 	@PostMapping
-	public ResponseEntity<?> createBeer(@RequestBody BeerDto beerDto) {
+	public ResponseEntity<?> createBeer(@Valid @RequestBody BeerDto beerDto) {
 
 		BeerDto savedDto = beerService.saveNewBeer(beerDto);
 
@@ -72,7 +77,7 @@ public class BeerController {
 	}
 
 	@PutMapping("/{beerId}")
-	public ResponseEntity<?> updateBeer(@PathVariable("beerId") UUID beerId, @RequestBody BeerDto beerDto) {
+	public ResponseEntity<?> updateBeer(@PathVariable("beerId") UUID beerId, @Valid @RequestBody BeerDto beerDto) {
 
 		beerService.updateBeer(beerId, beerDto);
 
@@ -85,4 +90,13 @@ public class BeerController {
 		beerService.deleteById(beerId);
 	}
 
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<List<String>> validationErrorHandler(ConstraintViolationException ex) {
+		List<String> errors = new ArrayList<>(ex.getConstraintViolations().size());
+		ex.getConstraintViolations().forEach(constraintViolation -> {
+			errors.add(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage());
+		});
+		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+	}
 }
