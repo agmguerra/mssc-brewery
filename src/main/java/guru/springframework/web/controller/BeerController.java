@@ -11,6 +11,8 @@ import javax.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -90,13 +92,26 @@ public class BeerController {
 		beerService.deleteById(beerId);
 	}
 
+// Nao funcionou desse jeito a exception disparada não é essa
+//	@ExceptionHandler(ConstraintViolationException.class)
+//	public ResponseEntity<List<String>> validationErrorHandler(ConstraintViolationException ex) {
+//		List<String> errors = new ArrayList<>(ex.getConstraintViolations().size());
+//		ex.getConstraintViolations().forEach(constraintViolation -> {
+//			System.out.println(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage());
+//			errors.add(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage());
+//		});
+//		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+//	}
 
-	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<List<String>> validationErrorHandler(ConstraintViolationException ex) {
-		List<String> errors = new ArrayList<>(ex.getConstraintViolations().size());
-		ex.getConstraintViolations().forEach(constraintViolation -> {
-			errors.add(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage());
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<List<String>> validationMethodErrorHandler(MethodArgumentNotValidException ex) {
+		BindingResult result = ex.getBindingResult();
+		List<String> errors = new ArrayList<>(ex.getBindingResult().getErrorCount());
+		result.getFieldErrors().forEach(error -> {
+			System.out.println(error.getField() + ": " + error.getDefaultMessage());
+			errors.add(error.getField() + ": " + error.getDefaultMessage());
 		});
 		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 	}
+
 }

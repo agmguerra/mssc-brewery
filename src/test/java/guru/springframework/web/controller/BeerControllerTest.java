@@ -48,7 +48,7 @@ public class BeerControllerTest {
         validBeer = BeerDto.builder().id(UUID.randomUUID())
                 .beerName("Beer1")
                 .beerStyle("PALE_ALE")
-                .UPC(123456789012L)
+                .UPC(12312323232L)
                 .build();
     }
 
