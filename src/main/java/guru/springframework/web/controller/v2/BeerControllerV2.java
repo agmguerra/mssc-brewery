@@ -1,19 +1,13 @@
 package guru.springframework.web.controller.v2;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -91,24 +85,5 @@ public class BeerControllerV2 {
 		beerService.deleteById(beerId);
 	}
 
-//	@ExceptionHandler(ConstraintViolationException.class)
-//	public ResponseEntity<List<String>> validationErrorHandler(ConstraintViolationException ex) {
-//		List<String> errors = new ArrayList<>(ex.getConstraintViolations().size());
-//		ex.getConstraintViolations().forEach(constraintViolation -> {
-//			errors.add(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage());
-//		});
-//		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-//	}
-
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<List<String>> validationMethodErrorHandler(MethodArgumentNotValidException ex) {
-		BindingResult result = ex.getBindingResult();
-		List<String> errors = new ArrayList<>(ex.getBindingResult().getErrorCount());
-		result.getFieldErrors().forEach(error -> {
-			System.out.println(error.getField() + ": " + error.getDefaultMessage());
-			errors.add(error.getField() + ": " + error.getDefaultMessage());
-		});
-		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-	}
 
 }

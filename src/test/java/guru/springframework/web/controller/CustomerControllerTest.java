@@ -32,7 +32,7 @@ import guru.springframework.web.services.CustomerService;
 @WebMvcTest(CustomerController.class)
 public class CustomerControllerTest {
 
-    private static final String CUST_NAME = "Cust Um";
+    private static final String CUST_NAME = "Cu";
 
 	private static final String API_V1_CUSTOMER = "/api/v1/customer/";
 
